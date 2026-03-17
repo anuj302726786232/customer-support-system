@@ -13,6 +13,7 @@ namespace SupportDeskAPI.Entity
         public string? UserName { get; set; }
         public string? Email { get; set; }
         public string? PasswordHash { get; set; }
+        public UserRole? UserRole { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public ICollection<Tickets>? Tickets { get; set; } = new List<Tickets>();
@@ -78,5 +79,10 @@ namespace SupportDeskAPI.Entity
     public enum TicketStatus
     {
         Open, InProgress, Closed
+    }
+
+    public enum UserRole
+    {
+        Admin, User
     }
 }
