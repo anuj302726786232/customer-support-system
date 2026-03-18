@@ -16,7 +16,7 @@ namespace SupportDeskAPI.Dto
         public TicketPriority? TicketPriority { get; set; }
     }
 
-    public class TicketListDto
+    public class TicketDetails
     {
         public long TicketNumber { get; set; }
 
@@ -43,6 +43,26 @@ namespace SupportDeskAPI.Dto
         public TicketStatus? Status { get; set; }
 
         // [Required(ErrorMessage = "Tikect Comment is required")]
+        public string? Comment { get; set; }
+    }
+
+    public class AssignTicketRequest 
+    {
+        public long UserId { get; set; }
+        public long TicketId { get; set; }
+        public TicketStatus TicketStatus { get; set; }
+        public string? Comment { get; set; }
+    }
+
+    public class TicketStatusUpdateRequest
+    {
+        public long TicketId { get; set; }
+        public TicketStatus TicketStatus { get; set; }
+    }
+
+    public class TicketCommentRequest
+    {
+        public long TicketId { get; set; }
         public string? Comment { get; set; }
     }
 }

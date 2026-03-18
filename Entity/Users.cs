@@ -65,7 +65,7 @@ namespace SupportDeskAPI.Entity
         public DateTime? CreatedAt { get; set; }
 
         public long TicketId { get; set; }
-        public Tickets Tickets { get; set; }
+        public Tickets Ticket { get; set; }
 
         public long UserId { get; set; }
         public Users User { get; set; }
