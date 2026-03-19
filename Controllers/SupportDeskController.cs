@@ -103,6 +103,39 @@ namespace SupportDeskAPI.Controllers
             }
         }
 
+        [HttpPost("assignticket")]
+        public async Task<IActionResult> AssignTicketAsync(AssignTicketRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(new { success = false, result = "Invalid credentials" });
+
+                var email = User.FindFirst(ClaimTypes.Name)?.Value;
+                if (string.IsNullOrEmpty(email))
+                    return Unauthorized(new { success = false, result = "Invalid email or password" });
+
+                var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+                if(string.IsNullOrEmpty(userRole) && userRole != "Admin")
+                    return StatusCode(StatusCodes.Status403Forbidden, new { success = false, result = "User havn't permission to perform action."})
+
+                var response = await _supportDeskService.AssignTicketAsync(request, email);
+                if (!response.Success)
+                    return response.ErrorCode switch
+                    {
+                        "InvalidUser" => Unauthorized(new { success = false, result = response.ErrorMessage }),
+                        "InvalidTicketId" => BadRequest(new { success = false, result = response.ErrorMessage }),
+                        _ => StatusCode(StatusCodes.Status500InternalServerError, new { success = false, result = response.ErrorMessage })
+                    };
+
+                return StatusCode(StatusCodes.Status201Created, new { success = false, result = $"TicketId: {request.TicketId} assigned successfully" });
+            }
+            catch
+            {
+                return BadRequest(new { success = false, result = "Internal Server Error" });
+            }
+        }
+
         [HttpGet("ticketdetails/{ticketId:long}")]
         public async Task<IActionResult> GetTicketDetailsByTicketId([FromQuery] long ticketId)
         {

@@ -157,15 +157,15 @@ namespace SupportDeskAPI.Services
             }
         }
 
-        public async Task<SupportDeskResponse<bool>> AssignedTicketAsync(AssignTicketRequest assignTicketRequest, string email)
+        public async Task<SupportDeskResponse<bool>> AssignTicketAsync(AssignTicketRequest assignTicketRequest, string email)
         {
             try
             {
                 await using var transaction = await _supportDbContext.Database.BeginTransactionAsync(); // Transaction Start Here
 
-                var userInfo = await _supportDbContext.users.FirstOrDefaultAsync(u => u.Email == email);
-                if (userInfo.UserRole != UserRole.Admin)
-                    return SupportDeskResponse<bool>.Fail("UnauthorizeAccess", "User haven't permission to perform acion");
+                var userInfo = await _supportDbContext.users.FirstOrDefaultAsync(u => u.UserId == assignTicketRequest.UserId);
+                if (userInfo == null)
+                    return SupportDeskResponse<bool>.Fail("InvalidUser", "Assign To User does not exist.");
 
                 var updatedTicket = await _supportDbContext.tickets.FirstOrDefaultAsync(t => t.TicketId == assignTicketRequest.TicketId);
                 if (updatedTicket == null)
