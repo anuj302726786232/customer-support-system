@@ -116,8 +116,8 @@ namespace SupportDeskAPI.Controllers
                     return Unauthorized(new { success = false, result = "Invalid email or password" });
 
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
-                if(string.IsNullOrEmpty(userRole) && userRole != "Admin")
-                    return StatusCode(StatusCodes.Status403Forbidden, new { success = false, result = "User havn't permission to perform action."})
+                if (string.IsNullOrEmpty(userRole) && userRole != "Admin")
+                    return StatusCode(StatusCodes.Status403Forbidden, new { success = false, result = "User havn't permission to perform action." });
 
                 var response = await _supportDeskService.AssignTicketAsync(request, email);
                 if (!response.Success)
