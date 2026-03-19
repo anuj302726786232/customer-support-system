@@ -41,10 +41,11 @@ namespace SupportDeskAPI.Auth
                 var password = credentials[1];
 
                 // Validate credentials (in real apps, check DB or config)
-                if (!await _service.LogInUserAsync(username, password))
+                var userRole = await _service.LogInUserAsync(username, password);
+                if (string.IsNullOrEmpty(userRole))
                     return AuthenticateResult.Fail("Invalid Username or Password");
 
-                var claims = new[] { new Claim(ClaimTypes.Name, username) };
+                var claims = new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, userRole) };
                 var identity = new ClaimsIdentity(claims, Scheme.Name);
                 var principal = new ClaimsPrincipal(identity);
                 var ticket = new AuthenticationTicket(principal, Scheme.Name);

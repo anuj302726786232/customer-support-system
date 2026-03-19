@@ -56,23 +56,23 @@ namespace SupportDeskAPI.Services
             }
         }
 
-        public async Task<bool> LogInUserAsync(string email, string password)
+        public async Task<string> LogInUserAsync(string email, string password)
         {
             try
             {
                 var User = await _supportDbContext.users.FirstOrDefaultAsync(u => u.Email == email);
                 if (User == null)
-                    return false;
+                    return null;
 
                 var passwordHasher = new PasswordHasher<Users>();
 
                 var result = passwordHasher.VerifyHashedPassword(User, User.PasswordHash, password);
 
-                return result == PasswordVerificationResult.Success ? true : false;
+                return result == PasswordVerificationResult.Success ? User.UserRole.ToString() : null;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
 
@@ -97,7 +97,8 @@ namespace SupportDeskAPI.Services
                     Priority = ticketDto.TicketPriority,
                     Status = TicketStatus.Open,
                     Created = DateTime.Now,
-                    UserId = user.UserId
+                    UserId = user.UserId,
+                    AssignedToUserId = 0
                 };
 
                 await _supportDbContext.tickets.AddAsync(newTicket);

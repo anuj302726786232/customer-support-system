@@ -21,6 +21,7 @@ namespace SupportDeskAPI.Dto
         public UserRole? UserRole { get; set; }
     }
 
+
     public class SupportDeskResponse<T>
     {
         public bool Success { get; set; }

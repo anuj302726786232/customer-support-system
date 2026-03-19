@@ -85,6 +85,7 @@ namespace SupportDeskAPI.Controllers
                 if (string.IsNullOrEmpty(email))
                     return Unauthorized(new { success = false, result = "Invalid email or password" });
 
+
                 var response = await _supportDeskService.GetAllTicketDetailsAsync(email);
                 if (!response.Success)
                     return response.ErrorCode switch
